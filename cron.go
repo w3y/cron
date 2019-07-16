@@ -250,6 +250,9 @@ func (c *Cron) run() {
 				c.snapshot <- c.entrySnapshot()
 				continue
 
+			case id := <-c.remove:
+				c.removeEntry(id)
+
 			case <-c.stop:
 				timer.Stop()
 				return
@@ -282,12 +285,6 @@ func (c *Cron) Stop() {
 func (c *Cron) entrySnapshot() []Entry {
 	entries := make([]Entry, len(c.entries))
 	for i, e := range c.entries {
-		/*entries = append(entries, &Entry{
-			Schedule: e.Schedule,
-			Next:     e.Next,
-			Prev:     e.Prev,
-			Job:      e.Job,
-		})*/
 		entries[i] = *e
 	}
 	return entries
