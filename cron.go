@@ -250,6 +250,9 @@ func (c *Cron) run() {
 				c.snapshot <- c.entrySnapshot()
 				continue
 
+			case id := <-c.remove:
+				c.removeEntry(id)
+
 			case <-c.stop:
 				timer.Stop()
 				return
